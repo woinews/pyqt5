@@ -1,0 +1,99 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'C:\Pricing_sys\test_ini.ui'
+#
+# Created by: PyQt5 UI code generator 5.10.1
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+import configparser
+from PyQt5.QtWidgets import QFileDialog  
+
+class Ui_Dialog(QtWidgets.QWidget):    #这里原来是object，但是文件读取QFileDialog是继承自QWidget的，如果用object则会出错
+    
+    def write_ini(self):
+        config=configparser.ConfigParser()
+        config.add_section("Staff_info")
+        config.set("Staff_info","name",self.name.text())
+        config.set("Staff_info","dept",self.dept.text())
+        config.set("Staff_info","position",self.position.text())
+        config.set("Staff_info","skill",self.skill.toPlainText())
+        fname = QFileDialog.getSaveFileName(self,'保存文件','./',('*.ini'))[0]
+        config.write(open(fname, "w"))
+    
+    def read_ini(self):
+        fname = QFileDialog.getOpenFileName(self, '打开文件','./',('*.ini'))[0]
+        config=configparser.ConfigParser()
+        config.read(fname)
+        self.name.setText(config.get("Staff_info","name")) 
+        self.dept.setText(config.get("Staff_info","dept")) 
+        self.position.setText(config.get("Staff_info","position"))
+        self.skill.setPlainText(config.get("Staff_info","skill"))    
+        
+    def setupUi(self, Dialog):
+        Dialog.setObjectName("Dialog")
+        Dialog.resize(226, 223)
+        Dialog.setSizeGripEnabled(True)
+        self.gridLayout = QtWidgets.QGridLayout(Dialog)
+        self.gridLayout.setObjectName("gridLayout")
+        self.label = QtWidgets.QLabel(Dialog)
+        self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
+        self.read_file = QtWidgets.QPushButton(Dialog)
+        self.read_file.setObjectName("read_file")
+        self.gridLayout.addWidget(self.read_file, 4, 0, 1, 1)
+        self.label_3 = QtWidgets.QLabel(Dialog)
+        self.label_3.setObjectName("label_3")
+        self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
+        self.name = QtWidgets.QLineEdit(Dialog)
+        self.name.setObjectName("name")
+        self.gridLayout.addWidget(self.name, 0, 1, 1, 2)
+        self.dept = QtWidgets.QLineEdit(Dialog)
+        self.dept.setObjectName("dept")
+        self.gridLayout.addWidget(self.dept, 1, 1, 1, 2)
+        self.label_2 = QtWidgets.QLabel(Dialog)
+        self.label_2.setObjectName("label_2")
+        self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
+        self.position = QtWidgets.QLineEdit(Dialog)
+        self.position.setObjectName("position")
+        self.gridLayout.addWidget(self.position, 2, 1, 1, 2)
+        self.label_4 = QtWidgets.QLabel(Dialog)
+        self.label_4.setObjectName("label_4")
+        self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
+        self.update_file = QtWidgets.QPushButton(Dialog)
+        self.update_file.setObjectName("update_file")
+        self.gridLayout.addWidget(self.update_file, 4, 2, 1, 1)
+        self.skill = QtWidgets.QPlainTextEdit(Dialog)
+        self.skill.setObjectName("skill")
+        self.gridLayout.addWidget(self.skill, 3, 1, 1, 2)
+
+        self.retranslateUi(Dialog)
+        self.update_file.clicked.connect(self.write_ini)
+        self.read_file.clicked.connect(self.read_ini)
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+    def retranslateUi(self, Dialog):
+        _translate = QtCore.QCoreApplication.translate
+        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        self.label.setText(_translate("Dialog", "姓名"))
+        self.read_file.setText(_translate("Dialog", "读取资料"))
+        self.label_3.setText(_translate("Dialog", "职位"))
+        self.name.setText(_translate("Dialog", "chenzx"))
+        self.dept.setText(_translate("Dialog", "产品部"))
+        self.label_2.setText(_translate("Dialog", "部门"))
+        self.position.setText(_translate("Dialog", "数据运营"))
+        self.label_4.setText(_translate("Dialog", "技能"))
+        self.update_file.setText(_translate("Dialog", "保存资料"))
+        self.skill.setPlainText(_translate("Dialog", "Excel/Sql/Tableau/Python/神策分析（网页）"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = Ui_Dialog()
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())
+
