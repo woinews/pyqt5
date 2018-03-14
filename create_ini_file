@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'C:\Pricing_sys\test_ini.ui'
-#
-# Created by: PyQt5 UI code generator 5.10.1
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 import configparser
 from PyQt5.QtWidgets import QFileDialog  
@@ -13,23 +5,29 @@ from PyQt5.QtWidgets import QFileDialog
 class Ui_Dialog(QtWidgets.QWidget):    #这里原来是object，但是文件读取QFileDialog是继承自QWidget的，如果用object则会出错
     
     def write_ini(self):
-        config=configparser.ConfigParser()
-        config.add_section("Staff_info")
-        config.set("Staff_info","name",self.name.text())
-        config.set("Staff_info","dept",self.dept.text())
-        config.set("Staff_info","position",self.position.text())
-        config.set("Staff_info","skill",self.skill.toPlainText())
-        fname = QFileDialog.getSaveFileName(self,'保存文件','./',('*.ini'))[0]
-        config.write(open(fname, "w"))
+        try:
+            config=configparser.ConfigParser()
+            config.add_section("Staff_info")
+            config.set("Staff_info","name",self.name.text())
+            config.set("Staff_info","dept",self.dept.text())
+            config.set("Staff_info","position",self.position.text())
+            config.set("Staff_info","skill",self.skill.toPlainText())
+            fname = QFileDialog.getSaveFileName(self,'保存文件','./',('*.ini'))[0]
+            config.write(open(fname, "w"))
+        except:
+            pass
     
     def read_ini(self):
-        fname = QFileDialog.getOpenFileName(self, '打开文件','./',('*.ini'))[0]
-        config=configparser.ConfigParser()
-        config.read(fname)
-        self.name.setText(config.get("Staff_info","name")) 
-        self.dept.setText(config.get("Staff_info","dept")) 
-        self.position.setText(config.get("Staff_info","position"))
-        self.skill.setPlainText(config.get("Staff_info","skill"))    
+        try:
+            fname = QFileDialog.getOpenFileName(self, '打开文件','./',('*.ini'))[0]
+            config=configparser.ConfigParser()
+            config.read(fname)
+            self.name.setText(config.get("Staff_info","name")) 
+            self.dept.setText(config.get("Staff_info","dept")) 
+            self.position.setText(config.get("Staff_info","position"))
+            self.skill.setPlainText(config.get("Staff_info","skill"))    
+        except:
+            pass
         
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
@@ -91,9 +89,9 @@ class Ui_Dialog(QtWidgets.QWidget):    #这里原来是object，但是文件读�
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
+    app.aboutToQuit.connect(app.deleteLater)    #加入这一句之后，能解决在程序第二次运行时产生【Python已停止运行】的异常
     Dialog = QtWidgets.QDialog()
     ui = Ui_Dialog()
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
-
